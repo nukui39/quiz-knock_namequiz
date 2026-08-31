@@ -1,1 +1,0 @@
-# quiz-knock_namequiz
