@@ -66,8 +66,7 @@
       第1問
     </div>
 
-    <div class="question">
-      鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？ 
+    <div class="question" id="question"> 
     </div>
 
     <button class="buzz-button" onclick="buzz()">
@@ -76,15 +75,58 @@
     
   </div>
 <script>
+
+  const questionText =
+    鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？ 
+  
+  let currentPosition = 0;
+  let isReading = true;
+  let readingTimer;
+
+  const questionElement = document.querySelector("#question");
+
+  function showNextCharacter() {
+
+    if (!isReading) return;
+
+    if (currentPosition >= questionText.length) {
+      isReading = false;
+      return;
+    }
+
+    questionElement.textContent += questionText[currentPosition];
+    currentPosition++;
+
+    let speed = 120;
+
+    if (questionText[currentPosition - 1] === "、") {
+      speed = 300;
+    }
+
+    if (questionText[currentPosition - 1] === "。") {
+      speed = 500;
+    }
+
+    readingTimer = setTimeout(showNextCharacter, speed);
+  }
+
+  showNextCharacter();
+
+
   function buzz() {
+
+    isReading = false;
+    clearTimeout(readingTimer);
+
     document.querySelector(".buzz-button").style.display = "none";
 
-    document.querySelector(".question").innerHTML =
-      "回答権を獲得しました！";
+    questionElement.innerHTML +=
+      "<br><br><strong>⚡ 回答権を獲得しました！</strong>";
 
     const answerArea = document.createElement("div");
 
     answerArea.innerHTML = `
+      <br>
       <input
         type="text"
         id="answer"
@@ -92,7 +134,9 @@
         style="font-size:20px; padding:12px; width:80%; max-width:400px;"
       >
       <br><br>
-      <button onclick="checkAnswer()" style="font-size:20px; padding:12px 30px;">
+
+      <button onclick="checkAnswer()"
+        style="font-size:20px; padding:12px 30px;">
         回答する
       </button>
     `;
@@ -100,15 +144,23 @@
     document.querySelector(".container").appendChild(answerArea);
   }
 
+
   function checkAnswer() {
-    const answer = document.querySelector("#answer").value.trim();
+
+    const answer =
+      document.querySelector("#answer").value.trim();
 
     if (answer === "伊沢拓司") {
+
       alert("🎉 正解！");
+
     } else {
+
       alert("❌ 不正解！\n正解は「伊沢拓司」です。");
+
     }
   }
+
 </script>
 </body>
 </html>
