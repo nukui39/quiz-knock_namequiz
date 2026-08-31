@@ -37,6 +37,7 @@
       line-height: 1.8;
       text-align: left;
       margin-bottom: 40px;
+      min-height: 160px;
     }
 
     .buzz-button {
@@ -53,6 +54,29 @@
     .buzz-button:active {
       transform: scale(0.95);
     }
+
+    .answer-input {
+      font-size: 20px;
+      padding: 12px;
+      width: 80%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+
+    .answer-button,
+    .next-button {
+      font-size: 20px;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .result {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 30px 0;
+    }
   </style>
 </head>
 
@@ -62,104 +86,349 @@
 
     <h1>QuizKnock Fan Quiz</h1>
 
-    <div class="question-number">
+    <div class="question-number" id="questionNumber">
       第1問
     </div>
 
-    <div class="question" id="question"> 
+    <div class="question" id="question">
     </div>
 
-    <button class="buzz-button" onclick="buzz()">
-  解答
-</button>
-    
+    <button class="buzz-button" id="buzzButton" onclick="buzz()">
+      ⚡ 早押し！
+    </button>
+
   </div>
+
+
 <script>
 
-  const questionText =
-    "鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？";
+  /* =========================
+     問題データ
+     ========================= */
+
+  const questions = [
+
+    {
+      question: "鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？",
+      answer: "伊沢拓司"
+    },
+
+    {
+      question: "QuizKnockを運営する株式会社batonの代表を務める人物は誰？",
+      answer: "伊沢拓司"
+    },
+
+    {
+      question: "『東大王』などへの出演でも知られる、QuizKnockのメンバーは誰？",
+      answer: "鶴崎修功"
+    },
+
+    {
+      question: "東京大学理学部数学科を卒業し、数学を得意とするQuizKnockのメンバーは誰？",
+      answer: "鶴崎修功"
+    },
+
+    {
+      question: "QuizKnockの動画などで、ふくらPという愛称で知られている人物は誰？",
+      answer: "福良拳"
+    },
+
+    {
+      question: "QuizKnockのYouTubeチャンネルを運営する会社として知られる株式会社baton。その代表取締役は誰？",
+      answer: "伊沢拓司"
+    },
+
+    {
+      question: "QuizKnockのメンバーとして活動し、東京大学出身の河村拓哉。彼が得意とするものとして知られる分野は何？",
+      answer: "クイズ"
+    },
+
+    {
+      question: "QuizKnockの企画などで活躍する、東大卒のクイズプレイヤーで、開成高校出身でもある人物は誰？",
+      answer: "伊沢拓司"
+    },
+
+    {
+      question: "QuizKnockのメンバーで、言葉遊びやクイズに関する企画などで活躍している人物は誰？",
+      answer: "山本祥彰"
+    },
+
+    {
+      question: "QuizKnockの動画で『東大最強の知識王』として知られることもある人物は誰？",
+      answer: "伊沢拓司"
+    }
+
+  ];
+
+
+  /* =========================
+     ゲームの設定
+     ========================= */
+
+  const totalQuestions = 10;
+
+  let selectedQuestions = [];
+  let currentQuestionIndex = 0;
+
   let currentPosition = 0;
   let isReading = true;
   let readingTimer;
 
-  const questionElement = document.querySelector("#question");
+
+  /* =========================
+     問題をランダムに10問選ぶ
+     ========================= */
+
+  function selectQuestions() {
+
+    const shuffled = [...questions];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [shuffled[i], shuffled[j]] =
+        [shuffled[j], shuffled[i]];
+
+    }
+
+    selectedQuestions =
+      shuffled.slice(0, totalQuestions);
+  }
+
+
+  /* =========================
+     問題を表示
+     ========================= */
+
+  function showQuestion() {
+
+    clearTimeout(readingTimer);
+
+    const question =
+      selectedQuestions[currentQuestionIndex];
+
+    document.querySelector("#questionNumber").textContent =
+      "第" + (currentQuestionIndex + 1) + "問";
+
+    const questionElement =
+      document.querySelector("#question");
+
+    questionElement.textContent = "";
+
+    document.querySelector("#buzzButton").style.display =
+      "inline-block";
+
+    currentPosition = 0;
+    isReading = true;
+
+    showNextCharacter();
+  }
+
+
+  /* =========================
+     問題文をゆっくり表示
+     ========================= */
 
   function showNextCharacter() {
 
     if (!isReading) return;
 
-    if (currentPosition >= questionText.length) {
+    const question =
+      selectedQuestions[currentQuestionIndex].question;
+
+    const questionElement =
+      document.querySelector("#question");
+
+    if (currentPosition >= question.length) {
+
       isReading = false;
       return;
+
     }
 
-    questionElement.textContent += questionText[currentPosition];
+    const character =
+      question[currentPosition];
+
+    questionElement.textContent += character;
+
     currentPosition++;
 
-    let speed = 220;
+    let speed = 240;
 
-    if (questionText[currentPosition - 1] === "、") {
+    if (character === "、") {
       speed = 450;
     }
 
-    if (questionText[currentPosition - 1] === "。") {
+    if (character === "。") {
       speed = 800;
     }
 
-    readingTimer = setTimeout(showNextCharacter, speed);
+    readingTimer =
+      setTimeout(showNextCharacter, speed);
   }
 
-  showNextCharacter();
 
+  /* =========================
+     早押し
+     ========================= */
 
   function buzz() {
 
     isReading = false;
+
     clearTimeout(readingTimer);
 
-    document.querySelector(".buzz-button").style.display = "none";
+    document.querySelector("#buzzButton").style.display =
+      "none";
+
+    const questionElement =
+      document.querySelector("#question");
 
     questionElement.innerHTML +=
       "<br><br><strong>⚡ 回答権を獲得しました！</strong>";
 
-    const answerArea = document.createElement("div");
+    const answerArea =
+      document.createElement("div");
+
+    answerArea.id = "answerArea";
 
     answerArea.innerHTML = `
       <br>
       <input
         type="text"
         id="answer"
+        class="answer-input"
         placeholder="答えを入力"
-        style="font-size:20px; padding:12px; width:80%; max-width:400px;"
       >
+
       <br><br>
 
-      <button onclick="checkAnswer()"
-        style="font-size:20px; padding:12px 30px;">
+      <button
+        class="answer-button"
+        onclick="checkAnswer()">
         回答する
       </button>
     `;
 
-    document.querySelector(".container").appendChild(answerArea);
+    document.querySelector(".container")
+      .appendChild(answerArea);
   }
 
+
+  /* =========================
+     答え合わせ
+     ========================= */
 
   function checkAnswer() {
 
     const answer =
       document.querySelector("#answer").value.trim();
 
-    if (answer === "伊沢拓司") {
+    const correctAnswer =
+      selectedQuestions[currentQuestionIndex].answer;
 
-      alert("🎉 正解！");
+    const answerArea =
+      document.querySelector("#answerArea");
+
+    if (answer === correctAnswer) {
+
+      answerArea.innerHTML = `
+        <div class="result">
+          🎉 正解！
+        </div>
+
+        <p>
+          正解：${correctAnswer}
+        </p>
+
+        <button
+          class="next-button"
+          onclick="nextQuestion()">
+          次の問題へ →
+        </button>
+      `;
 
     } else {
 
-      alert("❌ 不正解！\n正解は「伊沢拓司」です。");
+      answerArea.innerHTML = `
+        <div class="result">
+          ❌ 不正解！
+        </div>
+
+        <p>
+          正解：${correctAnswer}
+        </p>
+
+        <button
+          class="next-button"
+          onclick="nextQuestion()">
+          次の問題へ →
+        </button>
+      `;
+    }
+  }
+
+
+  /* =========================
+     次の問題
+     ========================= */
+
+  function nextQuestion() {
+
+    currentQuestionIndex++;
+
+    const oldAnswerArea =
+      document.querySelector("#answerArea");
+
+    if (oldAnswerArea) {
+      oldAnswerArea.remove();
+    }
+
+    if (currentQuestionIndex >= totalQuestions) {
+
+      showFinalResult();
+
+    } else {
+
+      showQuestion();
 
     }
   }
 
+
+  /* =========================
+     結果発表
+     ========================= */
+
+  function showFinalResult() {
+
+    document.querySelector("#questionNumber")
+      .textContent = "クイズ終了！";
+
+    document.querySelector("#question")
+      .innerHTML = `
+        <div style="text-align:center;">
+          🎉 10問終了！
+          <br><br>
+          お疲れさまでした！
+        </div>
+      `;
+
+    document.querySelector("#buzzButton")
+      .style.display = "none";
+  }
+
+
+  /* =========================
+     ゲーム開始
+     ========================= */
+
+  selectQuestions();
+
+  showQuestion();
+
 </script>
+
 </body>
 </html>
