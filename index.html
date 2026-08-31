@@ -70,11 +70,45 @@
       鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？ 
     </div>
 
-    <button class="buzz-button">
-      解答
-    </button>
-
+    <button class="buzz-button" onclick="buzz()">
+  解答
+</button>
+    
   </div>
+<script>
+  function buzz() {
+    document.querySelector(".buzz-button").style.display = "none";
 
+    document.querySelector(".question").innerHTML =
+      "回答権を獲得しました！";
+
+    const answerArea = document.createElement("div");
+
+    answerArea.innerHTML = `
+      <input
+        type="text"
+        id="answer"
+        placeholder="答えを入力"
+        style="font-size:20px; padding:12px; width:80%; max-width:400px;"
+      >
+      <br><br>
+      <button onclick="checkAnswer()" style="font-size:20px; padding:12px 30px;">
+        回答する
+      </button>
+    `;
+
+    document.querySelector(".container").appendChild(answerArea);
+  }
+
+  function checkAnswer() {
+    const answer = document.querySelector("#answer").value.trim();
+
+    if (answer === "伊沢拓司") {
+      alert("🎉 正解！");
+    } else {
+      alert("❌ 不正解！\n正解は「伊沢拓司」です。");
+    }
+  }
+</script>
 </body>
 </html>
