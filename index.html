@@ -96,14 +96,14 @@
     questionElement.textContent += questionText[currentPosition];
     currentPosition++;
 
-    let speed = 120;
+    let speed = 170;
 
     if (questionText[currentPosition - 1] === "、") {
-      speed = 300;
+      speed = 360;
     }
 
     if (questionText[currentPosition - 1] === "。") {
-      speed = 500;
+      speed = 600;
     }
 
     readingTimer = setTimeout(showNextCharacter, speed);
