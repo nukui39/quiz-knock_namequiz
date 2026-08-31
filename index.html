@@ -27,24 +27,6 @@
       margin-bottom: 40px;
     }
 
-    .start-text {
-      font-size: 22px;
-      margin-bottom: 30px;
-    }
-
-    .level-button {
-      display: block;
-      width: 80%;
-      max-width: 400px;
-      margin: 15px auto;
-      padding: 18px;
-      font-size: 22px;
-      font-weight: bold;
-      border: none;
-      border-radius: 15px;
-      cursor: pointer;
-    }
-
     .question-number {
       font-size: 20px;
       margin-bottom: 20px;
@@ -55,7 +37,6 @@
       line-height: 1.8;
       text-align: left;
       margin-bottom: 40px;
-      min-height: 160px;
     }
 
     .buzz-button {
@@ -72,29 +53,6 @@
     .buzz-button:active {
       transform: scale(0.95);
     }
-
-    .answer-input {
-      font-size: 20px;
-      padding: 12px;
-      width: 80%;
-      max-width: 400px;
-      box-sizing: border-box;
-    }
-
-    .answer-button,
-    .next-button {
-      font-size: 20px;
-      padding: 12px 30px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .result {
-      font-size: 24px;
-      font-weight: bold;
-      margin: 30px 0;
-    }
   </style>
 </head>
 
@@ -104,491 +62,104 @@
 
     <h1>QuizKnock Fan Quiz</h1>
 
-    <!-- スタート画面 -->
-    <div id="startScreen">
-
-      <div class="start-text">
-        難易度を選択してください
-      </div>
-
-      <button class="level-button" onclick="startGame('初級')">
-        🟢 初級
-      </button>
-
-      <button class="level-button" onclick="startGame('中級')">
-        🟡 中級
-      </button>
-
-      <button class="level-button" onclick="startGame('上級')">
-        🔴 上級
-      </button>
-
-      <button class="level-button" onclick="startGame('すべて')">
-        🌈 すべて
-      </button>
-
+    <div class="question-number">
+      第1問
     </div>
 
-
-    <!-- クイズ画面 -->
-    <div id="quizScreen" style="display:none;">
-
-      <div class="question-number" id="questionNumber">
-        第1問
-      </div>
-
-      <div class="question" id="question">
-      </div>
-
-      <button
-        class="buzz-button"
-        id="buzzButton"
-        onclick="buzz()">
-        ⚡ 早押し！
-      </button>
-
+    <div class="question" id="question"> 
     </div>
 
+    <button class="buzz-button" onclick="buzz()">
+  解答
+</button>
+    
   </div>
-
-
 <script>
 
-  /* =========================
-     問題データ
-     ========================= */
-
-  const questions = [
-
-    {
-      question: "鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？",
-      answer: "伊沢拓司",
-      level: "初級"
-    },
-
-    {
-      question: "QuizKnockを運営する株式会社batonの代表を務める人物は誰？",
-      answer: "伊沢拓司",
-      level: "初級"
-    },
-
-    {
-      question: "『東大王』などへの出演でも知られる、QuizKnockのメンバーは誰？",
-      answer: "鶴崎修功",
-      level: "中級"
-    },
-
-    {
-      question: "東京大学理学部数学科を卒業し、数学を得意とするQuizKnockのメンバーは誰？",
-      answer: "鶴崎修功",
-      level: "中級"
-    },
-
-    {
-      question: "QuizKnockの動画などで、ふくらPという愛称で知られている人物は誰？",
-      answer: "福良拳",
-      level: "初級"
-    },
-
-    {
-      question: "QuizKnockのメンバーとして活動し、東京大学出身の河村拓哉。彼が得意とするものとして知られる分野は何？",
-      answer: "クイズ",
-      level: "中級"
-    },
-
-    {
-      question: "QuizKnockの企画などで活躍する、東大卒のクイズプレイヤーで、開成高校出身でもある人物は誰？",
-      answer: "伊沢拓司",
-      level: "初級"
-    },
-
-    {
-      question: "QuizKnockのメンバーで、言葉遊びやクイズに関する企画などで活躍している人物は誰？",
-      answer: "山本祥彰",
-      level: "中級"
-    },
-
-    {
-      question: "QuizKnockの動画で『東大最強の知識王』として知られることもある人物は誰？",
-      answer: "伊沢拓司",
-      level: "上級"
-    },
-
-    {
-      question: "QuizKnockのメンバーとして知られ、東京大学出身のクイズプレイヤーである人物は誰？",
-      answer: "河村拓哉",
-      level: "上級"
-    }
-
-  ];
-
-
-  /* =========================
-     ゲーム設定
-     ========================= */
-
-  const totalQuestions = 10;
-
-  let selectedQuestions = [];
-  let currentQuestionIndex = 0;
-
+  const questionText =
+    鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？ 
   let currentPosition = 0;
   let isReading = true;
   let readingTimer;
 
-
-  /* =========================
-     ゲーム開始
-     ========================= */
-
-  function startGame(selectedLevel) {
-
-    let availableQuestions;
-
-    if (selectedLevel === "すべて") {
-
-      availableQuestions = [...questions];
-
-    } else {
-
-      availableQuestions =
-        questions.filter(
-          question => question.level === selectedLevel
-        );
-
-    }
-
-    /* 問題数が10問未満の場合 */
-
-    if (availableQuestions.length < totalQuestions) {
-
-      alert(
-        "この難易度にはまだ10問ありません。\n" +
-        "現在は " +
-        availableQuestions.length +
-        "問です。"
-      );
-
-      return;
-    }
-
-
-    /* 問題をシャッフル */
-
-    for (
-      let i = availableQuestions.length - 1;
-      i > 0;
-      i--
-    ) {
-
-      const j =
-        Math.floor(Math.random() * (i + 1));
-
-      [
-        availableQuestions[i],
-        availableQuestions[j]
-      ] = [
-        availableQuestions[j],
-        availableQuestions[i]
-      ];
-
-    }
-
-
-    /* 10問だけ選ぶ */
-
-    selectedQuestions =
-      availableQuestions.slice(0, totalQuestions);
-
-    currentQuestionIndex = 0;
-
-
-    /* スタート画面を隠す */
-
-    document.querySelector("#startScreen")
-      .style.display = "none";
-
-    document.querySelector("#quizScreen")
-      .style.display = "block";
-
-
-    showQuestion();
-  }
-
-
-  /* =========================
-     問題表示
-     ========================= */
-
-  function showQuestion() {
-
-    clearTimeout(readingTimer);
-
-    const question =
-      selectedQuestions[currentQuestionIndex];
-
-    document.querySelector("#questionNumber")
-      .textContent =
-      "第" +
-      (currentQuestionIndex + 1) +
-      "問";
-
-
-    const questionElement =
-      document.querySelector("#question");
-
-    questionElement.textContent = "";
-
-
-    document.querySelector("#buzzButton")
-      .style.display = "inline-block";
-
-
-    currentPosition = 0;
-    isReading = true;
-
-    showNextCharacter();
-  }
-
-
-  /* =========================
-     問題文をゆっくり表示
-     ========================= */
+  const questionElement = document.querySelector("#question");
 
   function showNextCharacter() {
 
     if (!isReading) return;
 
-
-    const question =
-      selectedQuestions[currentQuestionIndex].question;
-
-    const questionElement =
-      document.querySelector("#question");
-
-
-    if (currentPosition >= question.length) {
-
+    if (currentPosition >= questionText.length) {
       isReading = false;
       return;
-
     }
 
-
-    const character =
-      question[currentPosition];
-
-
-    questionElement.textContent += character;
-
+    questionElement.textContent += questionText[currentPosition];
     currentPosition++;
 
+    let speed = 120;
 
-    /* 文字の表示速度 */
-
-    let speed = 200;
-
-
-    /* 読点で少し間を置く */
-
-    if (character === "、") {
-      speed = 450;
+    if (questionText[currentPosition - 1] === "、") {
+      speed = 300;
     }
 
-
-    /* 句点でさらに間を置く */
-
-    if (character === "。") {
-      speed = 800;
+    if (questionText[currentPosition - 1] === "。") {
+      speed = 500;
     }
 
-
-    readingTimer =
-      setTimeout(
-        showNextCharacter,
-        speed
-      );
+    readingTimer = setTimeout(showNextCharacter, speed);
   }
 
+  showNextCharacter();
 
-  /* =========================
-     早押し
-     ========================= */
 
   function buzz() {
 
     isReading = false;
-
     clearTimeout(readingTimer);
 
-
-    document.querySelector("#buzzButton")
-      .style.display = "none";
-
-
-    const questionElement =
-      document.querySelector("#question");
-
+    document.querySelector(".buzz-button").style.display = "none";
 
     questionElement.innerHTML +=
       "<br><br><strong>⚡ 回答権を獲得しました！</strong>";
 
-
-    const answerArea =
-      document.createElement("div");
-
-
-    answerArea.id = "answerArea";
-
+    const answerArea = document.createElement("div");
 
     answerArea.innerHTML = `
       <br>
-
       <input
         type="text"
         id="answer"
-        class="answer-input"
         placeholder="答えを入力"
+        style="font-size:20px; padding:12px; width:80%; max-width:400px;"
       >
-
       <br><br>
 
-      <button
-        class="answer-button"
-        onclick="checkAnswer()">
+      <button onclick="checkAnswer()"
+        style="font-size:20px; padding:12px 30px;">
         回答する
       </button>
     `;
 
-
-    document.querySelector(".container")
-      .appendChild(answerArea);
+    document.querySelector(".container").appendChild(answerArea);
   }
 
-
-  /* =========================
-     答え合わせ
-     ========================= */
 
   function checkAnswer() {
 
     const answer =
-      document.querySelector("#answer")
-      .value
-      .trim();
+      document.querySelector("#answer").value.trim();
 
+    if (answer === "伊沢拓司") {
 
-    const correctAnswer =
-      selectedQuestions[currentQuestionIndex]
-        .answer;
-
-
-    const answerArea =
-      document.querySelector("#answerArea");
-
-
-    if (answer === correctAnswer) {
-
-      answerArea.innerHTML = `
-        <div class="result">
-          🎉 正解！
-        </div>
-
-        <p>
-          正解：${correctAnswer}
-        </p>
-
-        <button
-          class="next-button"
-          onclick="nextQuestion()">
-          次の問題へ →
-        </button>
-      `;
+      alert("🎉 正解！");
 
     } else {
 
-      answerArea.innerHTML = `
-        <div class="result">
-          ❌ 不正解！
-        </div>
-
-        <p>
-          正解：${correctAnswer}
-        </p>
-
-        <button
-          class="next-button"
-          onclick="nextQuestion()">
-          次の問題へ →
-        </button>
-      `;
+      alert("❌ 不正解！\n正解は「伊沢拓司」です。");
 
     }
-
-  }
-
-
-  /* =========================
-     次の問題
-     ========================= */
-
-  function nextQuestion() {
-
-    currentQuestionIndex++;
-
-
-    const oldAnswerArea =
-      document.querySelector("#answerArea");
-
-
-    if (oldAnswerArea) {
-      oldAnswerArea.remove();
-    }
-
-
-    if (
-      currentQuestionIndex >=
-      totalQuestions
-    ) {
-
-      showFinalResult();
-
-    } else {
-
-      showQuestion();
-
-    }
-
-  }
-
-
-  /* =========================
-     結果発表
-     ========================= */
-
-  function showFinalResult() {
-
-    document.querySelector("#questionNumber")
-      .textContent =
-      "クイズ終了！";
-
-
-    document.querySelector("#question")
-      .innerHTML = `
-        <div style="text-align:center;">
-          🎉 10問終了！
-          <br><br>
-          お疲れさまでした！
-        </div>
-      `;
-
-
-    document.querySelector("#buzzButton")
-      .style.display = "none";
-
   }
 
 </script>
-
 </body>
 </html>
