@@ -1,41 +1,26 @@
 <!DOCTYPE html>
-
 <html lang="ja">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>QuizKnock Fan Quiz</title>
+</head>
 
-  <style>
+<body>
 
-    body {
+  <h1>QuizKnock Fan Quiz</h1>
 
-      margin: 0;
+  <p>QuizKnockファン向け早押しクイズ</p>
 
-      font-family: sans-serif;
+  <h2>第1問</h2>
 
-      background: #f5f7fa;
+  <p>
+    QuizKnockのメンバーのうち、開成高校出身者は誰？
+  </p>
 
-      color: #222;
+  <button>伊沢拓司</button>
+  <button>ふくらP</button>
+  <button>山本祥彰</button>
 
-    }
-
-    .container {
-
-      max-width: 700px;
-
-      margin: 0 auto;
-
-      padding: 40px 20px;
-
-    }
-
-    h1 {
-
-      text-align: center;
-
-      margin-bottom: 10px;
+</body>
+</html>
