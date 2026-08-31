@@ -3,24 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>QuizKnock Fan Quiz</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+      background: #f5f5f5;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+    }
+
+    .question-number {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 22px;
+      line-height: 1.8;
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .buzz-button {
+      font-size: 28px;
+      font-weight: bold;
+      padding: 25px 60px;
+      border: none;
+      border-radius: 50px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+    }
+
+    .buzz-button:active {
+      transform: scale(0.95);
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1>QuizKnock Fan Quiz</h1>
+  <div class="container">
 
-  <p>QuizKnockファン向け早押しクイズ</p>
+    <h1>QuizKnock Fan Quiz</h1>
 
-  <h2>第1問</h2>
+    <div class="question-number">
+      第1問
+    </div>
 
-  <p>
-    QuizKnockのメンバーのうち、開成高校出身者は誰？
-  </p>
+    <div class="question">
+      鹿児島県鹿児島市で生まれたお笑いコンビ「南海キャンディーズ」のツッコミ担当として知られる芸人山里亮太がMCを務める、「土曜はナニする！？」にコーナーを持つメンバーは誰？
+      
+    </div>
 
-  <button>伊沢拓司</button>
-  <button>ふくらP</button>
-  <button>山本祥彰</button>
+    <button class="buzz-button">
+      ⚡ 早押し！
+    </button>
+
+  </div>
 
 </body>
 </html>
